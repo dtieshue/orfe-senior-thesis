@@ -3,22 +3,20 @@ from bs4 import BeautifulSoup
 import re
 import pandas as pd
 
-# Function to fetch and extract text content from a URL
+# define function to extract text content from a URL
 def extract_text_from_url(url, start_keyword, end_keyword):
     response = requests.get(url)
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Extract the text content from the HTML
+        # extract text from HTML
         text_content = soup.get_text().upper()
 
-        # Find the position of the start keyword and end keyword in the text
+        # find position of the start keyword and end keyword
         start_keyword_position = text_content.find(start_keyword)
         end_keyword_position = text_content.find(end_keyword)
 
         if start_keyword_position != -1 and end_keyword_position != -1:
-            # Extract and display text content starting from the start keyword
-            # up to just before the end keyword position
             relevant_text = text_content[start_keyword_position:end_keyword_position]
             return relevant_text
         else:
@@ -33,7 +31,7 @@ def extract_text_from_url(url, start_keyword, end_keyword):
 master_dict = {}
 
 # loop through each year *** NO 2023, no pre-2003
-for year in range(2020, 2022):
+for year in range(2015, 2022):
 
   # provide website data of NOAA archive for each year
   url = f'https://www.nhc.noaa.gov/archive/{year}'
@@ -188,8 +186,8 @@ for year in range(2020, 2022):
 
   # add the storm's dictionary information to the master dictionary
     master_dict[storm_name] = storm_dict
-    print("storm:")
-    print(storm_dict)
+    # print("storm:")
+    # print(storm_dict)
 
 
 
