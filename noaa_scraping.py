@@ -216,7 +216,7 @@ for year in range(2016, 2017):
   # dict = {'Python' : '.py', 'C++' : '.cpp', 'Java' : '.java'}
 
   # create a binary pickle file 
-  f = open(f"{year}data.pkl","wb")
+  f = open(f"Data/{year}data.pkl","wb")
 
   # write the python object (dict) to pickle file
   pickle.dump(master_dict,f)

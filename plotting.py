@@ -6,7 +6,7 @@ import re
 for year in range(2018, 2019):
 
     # open pickle file for a given storm year
-    f = open(f"{year}data.pkl", 'rb')
+    f = open(f"Data/{year}data.pkl", 'rb')
     x = pickle.load(f)
     f.close()
 
