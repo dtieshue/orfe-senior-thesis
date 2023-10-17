@@ -31,7 +31,7 @@ def extract_text_from_url(url, start_keyword, end_keyword):
 master_dict = {}
 
 # loop through each year *** NO 2023, no pre-2003
-for year in range(2015, 2017):
+for year in range(2016, 2017):
 
   # *********************************** comment out if putting data from mutliple years in one dict ***************************************
   master_dict = {}

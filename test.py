@@ -22,3 +22,13 @@ ax.imshow(map, extent=[-165, 190, -75, 150])
 
 plt.show()
 
+
+for i in range(5):
+    print(i)
+    for j in range(7):
+        print(j)
+        if j > 5:
+            break
+
+
+print("tet"[-1])

@@ -3,7 +3,7 @@ import pickle
 import numpy as np
 import re
 
-for year in range(2021, 2022):
+for year in range(2018, 2019):
 
     # open pickle file for a given storm year
     f = open(f"{year}data.pkl", 'rb')
@@ -27,16 +27,18 @@ for year in range(2021, 2022):
             for hrout in x[dict][key].keys():
                 lat = x[dict][key][hrout]['Latitude']
                 lon = x[dict][key][hrout]['Longitude']
-                if (lat[-1] != "N") & (lon[-1] != "W") & (lon[-1] != "E") & (lon[-1] != "S"):
+                if (lat[-1] != "N") & (lon[-1] != "W") & (lon[-1] != "E") & (lat[-1] != "S"):
                     break
                 if (lat[-1] == "N"):
                     lat_arr.append(float(lat[0:-1]))
+                elif (lat[-1] == "S"):
+                    lat_arr.append(-float(lat[0:-1]))   
                 if (lon[-1] == "E"):
                     lon_arr.append(float(lon[0:-1]))
-                if (lon[-1] == "W"):
+                elif (lon[-1] == "W"):
                     lon_arr.append(-float(lon[0:-1]))
-                if (lat[-1] == "S"):
-                    lat_arr.append(-float(lat[0:-1]))
+
+
                 # print(dict + ", " + key + ", " + hrout)
                 # print(lat + ", " + lon)
             print(dict + ", " + key + ": ")
