@@ -31,7 +31,7 @@ def extract_text_from_url(url, start_keyword, end_keyword):
 master_dict = {}
 
 # loop through each year *** NO 2023, no pre-2003
-for year in range(2015, 2021):
+for year in range(2019, 2020):
 
   # *********************************** comment out if putting data from mutliple years in one dict ***************************************
   master_dict = {}
@@ -144,8 +144,31 @@ for year in range(2015, 2021):
             if parts[0] == "INITIAL":
               parts[0] = "INIT"
 
+
+            # check if a line indicates that the storm has dissipated
+            if parts[1].find("DISSIPATED") != -1:
+              data_dict = {
+                  'TOut': parts[0],
+                  'Time (UTC)': parts[1][0:7],
+                  'Latitude': "n/a",
+                  'Longitude': "n/a",
+                  'Wind Speed (KT)': "n/a",
+                  'Dissipated?' : True
+              }
+
+            # check if a line indicates that the storm has dissipated
+            elif len(parts[1]) > 8:
+              data_dict = {
+                  'TOut': parts[0],
+                  'Time (UTC)': parts[1][0:7],
+                  'Latitude': "n/a",
+                  'Longitude': "n/a",
+                  'Wind Speed (KT)': "n/a",
+                  'Dissipated?' : True
+              }
+
             # check if the line in the advisory is complete
-            if len(parts) >= 6:
+            elif len(parts) >= 6:
               time = parts[0]
               date = parts[1]
               lat = parts[2]
@@ -161,18 +184,6 @@ for year in range(2015, 2021):
                   'Wind Speed (KT)': wind_speed,
                   'Dissipated?' : False
                   # Add more key-value pairs here if needed
-              }
-
-
-            # check if a line indicates that the storm has dissipated
-            elif parts[1].find("DISSIPATED") != -1:
-              data_dict = {
-                  'TOut': parts[0],
-                  'Time (UTC)': parts[1][0:7],
-                  'Latitude': "n/a",
-                  'Longitude': "n/a",
-                  'Wind Speed (KT)': "n/a",
-                  'Dissipated?' : True
               }
 
 

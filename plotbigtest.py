@@ -3,23 +3,25 @@ import pickle
 import numpy as np
 import re
 
-for year in range(2021, 2022):
 
+fig, ax = plt.subplots()
+
+# Load the image using plt.imread and provide the correct file path
+# map = plt.imread('/Users/dylantieshue/Documents/GitHub/orfe-senior-thesis/map1.png')
+# plt.imshow(map, extent=[-165, 190, -75, 150])
+plt.title("All plots on the same graph")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+plt.legend()
+
+for year in range(2015, 2022):
     # open pickle file for a given storm year
     f = open(f"{year}data.pkl", 'rb')
     x = pickle.load(f)
     f.close()
 
-
     # loop through each storm
     for dict in x:
-        fig, ax = plt.subplots()
-        plt.title(f"{dict}")
-        plt.xlabel("Longitude")
-        plt.ylabel("Latitude")
-        plt.legend()
-
-
         for key in x[dict].keys():
             # initialize np array of x values for plotting (lon is the longitude value, lat is latitude), one for each forecast
             lat_arr = []
@@ -45,7 +47,7 @@ for year in range(2021, 2022):
             plt.plot(lon_arr, lat_arr)
             
 
-        plt.show()
+plt.show()
 
         
 
