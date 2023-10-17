@@ -31,7 +31,10 @@ def extract_text_from_url(url, start_keyword, end_keyword):
 master_dict = {}
 
 # loop through each year *** NO 2023, no pre-2003
-for year in range(2015, 2022):
+for year in range(2015, 2021):
+
+  # *********************************** comment out if putting data from mutliple years in one dict ***************************************
+  master_dict = {}
 
   # provide website data of NOAA archive for each year
   url = f'https://www.nhc.noaa.gov/archive/{year}'
@@ -192,5 +195,30 @@ for year in range(2015, 2022):
 
 
 ################################################################################################################################################################################################################################################
+
+
+  # saving the data to a pickle file
+  # load pickle module
+  import pickle
+
+  # define dictionary
+  # dict = {'Python' : '.py', 'C++' : '.cpp', 'Java' : '.java'}
+
+  # create a binary pickle file 
+  f = open(f"{year}data.pkl","wb")
+
+  # write the python object (dict) to pickle file
+  pickle.dump(master_dict,f)
+
+  # close file
+  f.close()
+
+  # f = open("2021data.pkl", 'rb')
+
+  # x = pickle.load(f)
+
+  # f.close()
+
+  # print(x)
 
 
