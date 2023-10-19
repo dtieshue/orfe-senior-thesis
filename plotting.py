@@ -65,14 +65,7 @@ for year in range(2018, 2019):
             ax.set_xlim(float(min(lon_arr))-25, float(max(lon_arr))+25)
             ax.set_ylim(float(min(lat_arr))-25, float(max(lat_arr))+25)
 
-            # Set the gridline label formatting for latitude and longitude
-            gl.xlabels_top = gl.ylabels_right = False
-            gl.xlocator = mticker.FixedLocator(np.arange(int(min(lon_arr))-20, int(max(lon_arr))+20, 10))
-            gl.ylocator = mticker.FixedLocator(np.arange(int(min(lat_arr))-10, int(max(lat_arr))+10, 5))
-            gl.xformatter = LONGITUDE_FORMATTER
-            gl.yformatter = LATITUDE_FORMATTER
-            
 
         plt.show()
-        break
+        
 

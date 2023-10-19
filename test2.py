@@ -12,16 +12,18 @@ for year in range(2018, 2019):
     with open(f"Data/{year}data.pkl", 'rb') as f:
         x = pickle.load(f)
 
+    # set up the figure for all the storms
+    fig, ax = plt.subplots()
+    plt.title("All Plots 2018")
+    plt.xlabel("Longitude")
+    plt.ylabel("Latitude")
+    ax = plt.axes(projection=ccrs.Orthographic(-100, 37))
+    ax.coastlines()
+
     # Loop through each storm
     for dict in x:
 
-        # set up the figure for each storm
-        fig, ax = plt.subplots()
-        plt.title(f"{dict}")
-        plt.xlabel("Longitude")
-        plt.ylabel("Latitude")
-        ax = plt.axes(projection=ccrs.Orthographic(-100, 37))
-        ax.coastlines()
+        
         # ax.add_feature(cfeature.OCEAN, zorder=0)
         # ax.add_feature(cfeature.LAND, zorder=0, edgecolor='black')
 
@@ -65,6 +67,6 @@ for year in range(2018, 2019):
             # ax.set_ylim(float(min(lat_arr))-25, float(max(lat_arr))+25)
             ax.set_global()
 
-        plt.show()
         
-
+        
+    plt.show()
