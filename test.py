@@ -1,34 +1,38 @@
-print("hello world")
-print("hello 2")
-
-
 import matplotlib.pyplot as plt
 import numpy as np
 
-x = np.arange(100)
-y = 2 * np.arange(100)
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
 
-# Load the image using plt.imread and provide the correct file path
-map = plt.imread('/Users/dylantieshue/Documents/GitHub/orfe-senior-thesis/map1.png')
 
-# Create a single subplot
-fig, ax = plt.subplots(1)
 
-# Plot the data on the subplot
-ax.plot(x, y)
 
-# Display the image using imshow on the same subplot
-ax.imshow(map, extent=[-165, 190, -75, 150])
+fig = plt.figure()
+
+
+
+## Customize Plotting ##
+# Create a colormap to represent the increasing brightness
+colormap = cm.plasma
+color = colormap(i / len(x[dict]))
+
+# # plot values on xy plane (not transformed)
+# plt.plot(lon_arr, lat_arr, color=color)
+# mark starting point for each forecast
+ax = fig.add_subplot(1, 1, 1, projection=ccrs.Orthographic(lon_arr[0], lat_arr[0]))
+ax.add_feature(cfeature.OCEAN, zorder=0)
+ax.add_feature(cfeature.LAND, zorder=0, edgecolor='black')
+
+
+ax.set_global()
+ax.gridlines()
+ax.plot(lon_arr[0], lat_arr[0], marker = "o", color = color)
+
+# plotting the forecasts
+ax.plot(lon_arr, lat_arr,
+color=color, linewidth=2,
+transform=ccrs.Geodetic(),)  
+
 
 plt.show()
 
-
-for i in range(5):
-    print(i)
-    for j in range(7):
-        print(j)
-        if j > 5:
-            break
-
-
-print("tet"[-1])

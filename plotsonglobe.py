@@ -20,7 +20,7 @@ for year in range(2018, 2019):
         plt.title(f"{dict}")
         plt.xlabel("Longitude")
         plt.ylabel("Latitude")
-        ax = plt.axes(projection=ccrs.PlateCarree())
+        ax = plt.axes(projection=ccrs.Orthographic(-100, 37))
         ax.coastlines()
         ax.add_feature(cfeature.OCEAN, zorder=0)
         ax.add_feature(cfeature.LAND, zorder=0, edgecolor='black')
@@ -54,7 +54,6 @@ for year in range(2018, 2019):
             # plt.plot(lon_arr, lat_arr, color=color)
             # mark starting point for each forecast
             ax.plot(lon_arr[0], lat_arr[0], marker = "o", color = color)
-           
             # plotting the forecasts
             ax.plot(lon_arr, lat_arr,
             color=color, linewidth=2,
@@ -62,17 +61,10 @@ for year in range(2018, 2019):
 
 
             # # setting ax view range values
-            ax.set_xlim(float(min(lon_arr))-25, float(max(lon_arr))+25)
-            ax.set_ylim(float(min(lat_arr))-25, float(max(lat_arr))+25)
-
-            # Set the gridline label formatting for latitude and longitude
-            gl.xlabels_top = gl.ylabels_right = False
-            gl.xlocator = mticker.FixedLocator(np.arange(int(min(lon_arr))-20, int(max(lon_arr))+20, 10))
-            gl.ylocator = mticker.FixedLocator(np.arange(int(min(lat_arr))-10, int(max(lat_arr))+10, 5))
-            gl.xformatter = LONGITUDE_FORMATTER
-            gl.yformatter = LATITUDE_FORMATTER
-            
+            # ax.set_xlim(float(min(lon_arr))-25, float(max(lon_arr))+25)
+            # ax.set_ylim(float(min(lat_arr))-25, float(max(lat_arr))+25)
+            ax.set_global()
 
         plt.show()
-        break
+        
 
