@@ -129,7 +129,7 @@ for year in range(2016, 2017):
         if name_datetime:
             print(f'Date/Time: \n{name_datetime_arr}\n')
         if loc_speed:
-            # Process or print the text content as needed
+            # print text content
             print(f'Location/Direction/Speed:\n{loc_speed_arr}')
 
         # storm_name = name_datetime
@@ -183,7 +183,6 @@ for year in range(2016, 2017):
                   'Longitude': lon,
                   'Wind Speed (KT)': wind_speed,
                   'Dissipated?' : False
-                  # Add more key-value pairs here if needed
               }
 
 
