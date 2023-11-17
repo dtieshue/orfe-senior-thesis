@@ -31,7 +31,7 @@ def extract_text_from_url(url, start_keyword, end_keyword):
 master_dict = {}
 
 # loop through each year *** NO 2023, no pre-2003
-for year in range(2016, 2017):
+for year in range(2005, 2006):
 
   # *********************************** comment out if putting data from mutliple years in one dict ***************************************
   master_dict = {}
@@ -145,7 +145,7 @@ for year in range(2016, 2017):
               parts[0] = "INIT"
 
 
-            # check if a line indicates that the storm has dissipated
+            # check if a line indicates that the storm has dissipated (if it says dissipated)
             if parts[1].find("DISSIPATED") != -1:
               data_dict = {
                   'TOut': parts[0],
@@ -156,7 +156,7 @@ for year in range(2016, 2017):
                   'Dissipated?' : True
               }
 
-            # check if a line indicates that the storm has dissipated
+            # check if a line indicates that the storm has dissipated (by checking if the second element is long, indicating an explanation/description)
             elif len(parts[1]) > 8:
               data_dict = {
                   'TOut': parts[0],
