@@ -5,6 +5,7 @@ import re
 from matplotlib import cm
 import numpy as np
 from math import sin, cos, sqrt, atan2, radians
+from datetime import datetime, timedelta
 
 
 # function to check if date/time matches format
@@ -72,6 +73,7 @@ def calc_rmax(v_max, r_175, lat):
 # ]
 
 storm_codes = ['AL092017']
+month = 8
 
 for storm in storm_codes:
     year = int(storm[-4:])
@@ -79,21 +81,21 @@ for storm in storm_codes:
     with open(f"Data/{year}data.pkl", 'rb') as f:
         x = pickle.load(f)
 
-    dict = storm
     houston = np.array([29.7604, -95.3698]) # define the lat lon values for houston
     nola = np.array([29.9511, -90.0715]) # define the lat lon values for new orleans
     test = np.array([14.1, -70.3698]) # define the lat lon values for test city
     miami = np.array([25.7617,-80.1918]) # define the lat lon values for miami
 
-    print(x[dict]['1']['INIT']['Latitude'])
-    time = list('29/0300Z')
-    p = '01/0900Z'
-
-
+    # Initialize inception time (storm conception time)
+    inception_time_str = x[storm]['1']['INIT']['Time (UTC)']
+    inception_day = int(inception_time_str[:2])
+    # inception_hour = int(inception_time_str[3:5])
+    inception_hour = 0
+    inception_time = datetime(year, month, inception_day, inception_hour)  # Month is assumed to be January    
 
     # set up the figure for each storm
     fig, ax = plt.subplots(figsize=(10, 6))
-    plt.title(f"{dict}")
+    plt.title(f"{storm}")
     plt.xlabel("Hours Since Inception")
     plt.ylabel("Wind Speed")
 
@@ -102,29 +104,31 @@ for storm in storm_codes:
     prev29 = 0
     prev30 = 0
     prev31 = 0
-    base_day = list(x[dict]['1']['INIT']['Time (UTC)'])[0:2]
+    base_day = list(x[storm]['1']['INIT']['Time (UTC)'])[0:2]
+    print("BD1:", base_day)
     base_day = [int(base_day[0]), int(base_day[1])]
+    print(base_day)
 
-
-    for i, key in enumerate(x[dict].keys()):
+    for i, key in enumerate(x[storm].keys()):
         times = [] # temporary until I have final formula for the threat score
         wind_speeds = []
         lat_arr = []
         lon_arr = []
         hscore_arr = []
+        datetimes = []  # Store datetime objects
 
-        for j, key2 in enumerate(x[dict][key].keys()):
+        for j, key2 in enumerate(x[storm][key].keys()):
         
-            print(key, key2) # for debugging
+            # print(key, key2) # for debugging
 
-            if (x[dict][key][key2]['Dissipated?'] != True):
+            if (x[storm][key][key2]['Dissipated?'] != True):
 
-                lat = x[dict][key][key2]['Latitude']
-                lon = x[dict][key][key2]['Longitude']
-                ws_temp = x[dict][key][key2]['Wind Speed (KT)']   
+                lat = x[storm][key][key2]['Latitude']
+                lon = x[storm][key][key2]['Longitude']
+                ws_temp = x[storm][key][key2]['Wind Speed (KT)']   
                 
                 # only add time if it is not dissipated
-                time_string = list(x[dict][key][key2]['Time (UTC)']) # need to include timing later
+                time_string = list(x[storm][key][key2]['Time (UTC)']) # need to include timing later
                 # times.append((2*j + i) * 6)
 
 
@@ -145,12 +149,19 @@ for storm in storm_codes:
                     day_hrs = ((current_day[0] - base_day[0])*10 + (current_day[1] - base_day[1]) + adds)* 24
                     hour = int(time_string[3]) * 10 + int(time_string[4]) + day_hrs
                     print(hour)
-                    times.append(hour)
+                    # times.append(hour)
+                    # Extract time and convert to datetime
+                    current_datetime = inception_time + timedelta(hours=hour)
+                    times.append(current_datetime)
                 else:
                     day_hrs = ((current_day[0] - base_day[0])*10 + (current_day[1] - base_day[1]))* 24
                     hour = int(time_string[3]) * 10 + int(time_string[4]) + day_hrs
                     print(hour)
-                    times.append(hour)
+                    # times.append(hour)
+
+                    # Extract time and convert to datetime
+                    current_datetime = inception_time + timedelta(hours=hour)
+                    times.append(current_datetime)
             
                 wind_speeds.append(int(ws_temp))
 
@@ -176,7 +187,7 @@ for storm in storm_codes:
         print(hscore_arr)
 
         colormap = cm.tab20
-        color = colormap(i / len(x[dict]))
+        color = colormap(i / len(x[storm]))
 
 
         
@@ -185,8 +196,8 @@ for storm in storm_codes:
         ax.plot(times, hscore_arr, color=color, label = key)
         ax.legend()
 
-
     plt.show()
 
+    
 
 
