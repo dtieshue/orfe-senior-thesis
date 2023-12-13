@@ -72,8 +72,8 @@ def calc_rmax(v_max, r_175, lat):
 #     "AL032021", "AL062021", "AL072021", "AL092021", "AL142021", "EP042021", "EP142021", "EP162021", "EP172021"
 # ]
 
-storm_codes = ['AL092017']
-month = 8
+storm_codes = ['AL142021']
+month = 9
 
 for storm in storm_codes:
     year = int(storm[-4:])
@@ -108,6 +108,8 @@ for storm in storm_codes:
     print("BD1:", base_day)
     base_day = [int(base_day[0]), int(base_day[1])]
     print(base_day)
+    max_harr = []
+    t_release = []
 
     for i, key in enumerate(x[storm].keys()):
         times = [] # temporary until I have final formula for the threat score
@@ -116,6 +118,7 @@ for storm in storm_codes:
         lon_arr = []
         hscore_arr = []
         datetimes = []  # Store datetime objects
+        max_hs = 0
 
         for j, key2 in enumerate(x[storm][key].keys()):
         
@@ -178,8 +181,14 @@ for storm in storm_codes:
                 # print("the distance is", dist) # for debugging
                 windspeed_ms = int(ws_temp) * 0.5144 # change from knots to m/s
                 hscore_arr.append(wind_speed(dist, windspeed_ms, calc_rmax(windspeed_ms, 60, lat_arr[-1]))) # calculate
-                prev_day = current_day
 
+                if (hscore_arr[-1] > max_hs):
+                    max_hs = hscore_arr[-1]
+
+                prev_day = current_day
+        
+        max_harr.append(max_hs)
+        t_release.append(times[0])
         print(times)
         print(wind_speeds)
         print(lat_arr)
@@ -197,6 +206,15 @@ for storm in storm_codes:
         ax.legend()
 
     plt.show()
+
+    # max hscore plot per discussion
+    fig2, ax2 = plt.subplots(figsize=(10, 6))
+    plt.title(f"Maxval {storm}")
+    plt.xlabel("Hours Since Inception")
+    plt.ylabel("Wind Speed")
+    ax2.plot(t_release, max_harr, marker = "o")
+    plt.show()
+
 
     
 

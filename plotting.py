@@ -7,7 +7,7 @@ import cartopy.feature as cfeature
 import matplotlib.ticker as mticker
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 
-for year in range(2018, 2019):
+for year in range(2021, 2022):
     # Open pickle file for a given storm year
     with open(f"Data/{year}data.pkl", 'rb') as f:
         x = pickle.load(f)
@@ -70,5 +70,7 @@ for year in range(2018, 2019):
 
         plt.show()
         
+
+
 
 

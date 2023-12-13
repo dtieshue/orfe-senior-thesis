@@ -4,23 +4,23 @@ import matplotlib.dates as mdates
 from datetime import datetime
 
 # load data of crude oil, gasoline, and heating oil contracts
-file_path = 'bins17.csv'
+file_path = 'bins20.csv'
 data = pd.read_csv(file_path)
 
 # convert date and time to a datetime format
 data['datetime'] = pd.to_datetime(data['date']) + pd.to_timedelta(data['time'], unit='min')
 
-# applying the display factor
-data['bid'] *= data['sym'].apply(lambda x: 0.01 if x.startswith('CL') else 0.0001)
-data['ask'] *= data['sym'].apply(lambda x: 0.01 if x.startswith('CL') else 0.0001)
-data['prc'] *= data['sym'].apply(lambda x: 0.01 if x.startswith('CL') else 0.0001)
+# # applying the display factor
+# data['bid'] *= data['sym'].apply(lambda x: 0.01 if x.startswith('CL') else 0.0001)
+# data['ask'] *= data['sym'].apply(lambda x: 0.01 if x.startswith('CL') else 0.0001)
+# data['prc'] *= data['sym'].apply(lambda x: 0.01 if x.startswith('CL') else 0.0001)
 
 # convert HO and RB prices to per barrel
 data.loc[data['sym'].str.contains('HO') | data['sym'].str.contains('RB'), ['bid', 'ask', 'prc']] *= 42
 
 # filter data for the desired date range
-start_date = datetime(2017, 8, 16)
-end_date = datetime(2017, 9, 3)
+start_date = datetime(2020, 9, 14)
+end_date = datetime(2020, 9, 26)
 filtered_data = data[(data['datetime'] >= start_date) & (data['datetime'] <= end_date)]
 
 # calculate crack spreads for each time

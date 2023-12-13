@@ -53,7 +53,7 @@ for i, key in enumerate(x[dict].keys()):
 
     ## Customize Plotting ##
     # Create a colormap to represent the increasing brightness
-    colormap = cm.Paired
+    colormap = cm.plasma
     color = colormap((i % 12)/12)
 
     # mark starting point for each forecast
@@ -65,7 +65,7 @@ for i, key in enumerate(x[dict].keys()):
             transform=ccrs.Geodetic(),)
 
 # plot city of interest
-ax.plot(-95.3698, 29.7604, marker="o", color='r', markersize=10)
+ax.plot(-95.3698, 29.7604, marker="*", color='c', markersize=10)
 ax.plot(-80.1918, 25.7617, marker="o", color='r', markersize=1)
 ax.plot(-76.8099, 18.0179, marker="o", color='r', markersize=1)
 
