@@ -1,12 +1,14 @@
+import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import pickle
-from dateutil import parser
-import re
-from matplotlib import cm
+from datetime import datetime, timedelta
 import numpy as np
 from math import sin, cos, sqrt, atan2, radians
-from datetime import datetime, timedelta
+import re
+from matplotlib import cm
 
+# Function definitions for wind speed calculation
 
 # function to check if date/time matches format
 def check_pattern(input_string, pattern):
@@ -59,16 +61,6 @@ def calc_m175(r_175, lat):
 def calc_rmax(v_max, r_175, lat):
     return v_max/(calc_f(lat))*(sqrt(1+2*calc_f(lat)*(calc_m175(r_175, lat)*calc_mratio(v_max, r_175, lat))/(v_max**2))-1)
 
-
-# storm_codes = [
-#     "AL022015", "EP162015", "EP202015", "EP222015", 
-#     "AL042016", 
-#     "AL032017", "AL072017", "AL092017", "AL132017", "AL162017", "EP182017", 
-#     "AL012018", "AL072018", "EP032018", "EP192018", "EP202018", "EP212018", "EP232018", "EP242018", 
-#     "AL022019", "AL072019", "AL112019", "AL162019", "AL172019", "EP152019", "EP162019", 
-#     "AL032020", "AL082020", "AL132020", "AL142020", "AL192020", "AL222020", "AL262020", "AL282020", 
-#     "AL032021", "AL062021", "AL072021", "AL092021", "AL142021", "EP042021", "EP142021", "EP162021", "EP172021"
-# ]
 
 storm_codes = ['AL092017']
 month = 8
@@ -185,33 +177,70 @@ for storm in storm_codes:
         
         max_harr.append(max_hs)
         t_release.append(times[0])
-        print(times)
-        print(wind_speeds)
-        print(lat_arr)
-        print(lon_arr)
-        print(hscore_arr)
-
-        colormap = cm.tab20
-        color = colormap(i / len(x[storm]))
 
 
-        
-        # plotting the forecasts
-        ax.plot(times[0], hscore_arr[0], marker = "o", color = color)
-        ax.plot(times, hscore_arr, color=color, label = key)
-        ax.legend()
+# Load the CSV data for crack spread
+file_path = 'eod.csv'
+data = pd.read_csv(file_path)
 
-    plt.show()
+# Define the start and end date for the date range for crack spread
+start_date = '2017-08-01'  # Adjust to your desired start date
+end_date = '2017-09-20'    # Adjust to your desired end date
 
-    # max hscore plot per discussion
-    fig2, ax2 = plt.subplots(figsize=(10, 6))
-    plt.title(f"Maxval {storm}")
-    plt.xlabel("Hours Since Inception")
-    plt.ylabel("Wind Speed")
-    ax2.plot(t_release, max_harr, marker = "o")
-    plt.show()
+# Processing steps for crack spread
+
+# Grouping the data by date, year, and month, then summing the total volumes for these groups
+grouped_data = data.groupby(['date', 'yr', 'mon']).sum()['totvlm'].reset_index()
+
+# Finding the year and month combination with the maximum summed trading volume for each day
+max_vol_dates = grouped_data.loc[grouped_data.groupby('date')['totvlm'].idxmax()]
+
+# Merging the original data with the max_vol_dates to get the settle prices for the contracts with the highest volumes
+merged_data = pd.merge(data, max_vol_dates, on=['date', 'yr', 'mon'])
+
+# Pivot the merged_data to make it easier to calculate the crack spread
+pivot_data = merged_data.pivot_table(index='date', columns='prs', values='settle', aggfunc='first')
+
+# Calculate the crack spread: [2 * Gasoline Price + 1 * Heating Oil Price - 3 * Crude oil price]
+pivot_data['crack_spread'] = 2 * pivot_data['RB'] * 42 + pivot_data['HO'] * 42 - 3 * pivot_data['CL']
+
+# Convert the index to datetime if it's not already
+pivot_data.index = pd.to_datetime(pivot_data.index)
+
+# Filter the data to include only the dates within the specified range
+filtered_data = pivot_data[(pivot_data.index >= start_date) & (pivot_data.index <= end_date)]
 
 
-    
 
+# Convert the index to datetime if it's not already
+pivot_data.index = pd.to_datetime(pivot_data.index)
 
+# Filter the data to include only the dates within the specified range
+filtered_crack_spread = pivot_data[(pivot_data.index >= start_date) & (pivot_data.index <= end_date)]
+
+# Load and process the wind speed data
+wind_speed_data = max_harr
+
+# Plotting the crack spread and wind speed on the same graph
+fig, ax1 = plt.subplots(figsize=(12, 6))
+
+# Crack spread plot
+ax1.plot(filtered_crack_spread.index, filtered_crack_spread['crack_spread'], label='3:2:1 Crack Spread', color='blue')
+ax1.set_xlabel('Date')
+ax1.set_ylabel('Crack Spread Value', color='blue')
+ax1.tick_params(axis='y', labelcolor='blue')
+ax1.legend(loc='upper left')
+
+# Wind speed plot on secondary axis
+ax2 = ax1.twinx()
+ax2.plot(wind_speed_data.index, wind_speed_data.values, label='Max Wind Speed', color='red', marker='o')
+ax2.set_ylabel('Wind Speed', color='red')
+ax2.tick_params(axis='y', labelcolor='red')
+ax2.legend(loc='upper right')
+
+# Final plot adjustments
+plt.title('Crack Spread and Max Wind Speed Over Time')
+plt.xticks(rotation=45)
+plt.grid(True)
+plt.tight_layout()
+plt.show()
