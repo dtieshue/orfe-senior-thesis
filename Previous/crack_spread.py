@@ -4,7 +4,7 @@ import matplotlib.dates as mdates
 from datetime import datetime
 
 # load data of crude oil, gasoline, and heating oil contracts
-file_path = 'bins20.csv'
+file_path = 'bins17.csv'
 data = pd.read_csv(file_path)
 
 # convert date and time to a datetime format
@@ -19,8 +19,8 @@ data['datetime'] = pd.to_datetime(data['date']) + pd.to_timedelta(data['time'], 
 data.loc[data['sym'].str.contains('HO') | data['sym'].str.contains('RB'), ['bid', 'ask', 'prc']] *= 42
 
 # filter data for the desired date range
-start_date = datetime(2020, 9, 14)
-end_date = datetime(2020, 9, 26)
+start_date = datetime(2017, 8, 1)
+end_date = datetime(2017, 9, 30)
 filtered_data = data[(data['datetime'] >= start_date) & (data['datetime'] <= end_date)]
 
 # calculate crack spreads for each time

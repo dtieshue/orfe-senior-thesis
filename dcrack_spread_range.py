@@ -2,9 +2,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
-# Define the start and end date for the date range
-start_date = '2017-08-01'  # Change to your desired start date
-end_date = '2017-12-01'    # Change to your desired end date
+# # Nicholas
+# start_date = '2019-09-01'  # Change to your desired start date
+# end_date = '2019-09-30'    # Change to your desired end date
+
+# Beta
+start_date = '2020-09-18'  # Change to your desired start date
+end_date = '2021-09-18'    # Change to your desired end date
+
+# # Harvey
+# start_date = '2017-08-01'  # Change to your desired start date
+# end_date = '2017-09-30'    # Change to your desired end date
 
 # Load the CSV data
 file_path = 'eod.csv'

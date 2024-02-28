@@ -59,16 +59,7 @@ def calc_m175(r_175, lat):
 def calc_rmax(v_max, r_175, lat):
     return v_max/(calc_f(lat))*(sqrt(1+2*calc_f(lat)*(calc_m175(r_175, lat)*calc_mratio(v_max, r_175, lat))/(v_max**2))-1)
 
-
-# storm_codes = [
-#     "AL022015", "EP162015", "EP202015", "EP222015", 
-#     "AL042016", 
-#     "AL032017", "AL072017", "AL092017", "AL132017", "AL162017", "EP182017", 
-#     "AL012018", "AL072018", "EP032018", "EP192018", "EP202018", "EP212018", "EP232018", "EP242018", 
-#     "AL022019", "AL072019", "AL112019", "AL162019", "AL172019", "EP152019", "EP162019", 
-#     "AL032020", "AL082020", "AL132020", "AL142020", "AL192020", "AL222020", "AL262020", "AL282020", 
-#     "AL032021", "AL062021", "AL072021", "AL092021", "AL142021", "EP042021", "EP142021", "EP162021", "EP172021"
-# ]
+# define list of storms to plot wind speed
 
 storm_codes = ['AL092017']
 month = 8
@@ -83,6 +74,7 @@ for storm in storm_codes:
     nola = np.array([29.9511, -90.0715]) # define the lat lon values for new orleans
     test = np.array([14.1, -70.3698]) # define the lat lon values for test city
     miami = np.array([25.7617,-80.1918]) # define the lat lon values for miami
+    galveston = ([29.3013, -94.7977])
 
     # Initialize inception time (storm conception time)
     inception_time_str = x[storm]['1']['INIT']['Time (UTC)']
@@ -172,7 +164,7 @@ for storm in storm_codes:
                     lon_arr.append(float(lon[0:-1]))
                 elif (lon[-1] == "W"):
                     lon_arr.append(-float(lon[0:-1]))
-                city = houston
+                city = galveston
                 dist = distance(city, np.array([lat_arr[-1], lon_arr[-1]]))
                 # print("the distance is", dist) # for debugging
                 windspeed_ms = int(ws_temp) * 0.5144 # change from knots to m/s
