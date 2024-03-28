@@ -61,8 +61,19 @@ def calc_rmax(v_max, r_175, lat):
 
 # define list of storms to plot wind speed
 
-storm_codes = ['AL092017']
-month = 8
+storm_codes_significant = ['AL032017', 'AL092017', 'AL022019', 'AL112019', 'AL082020', 'AL132020', 'AL142020', 'AL222020', 'AL262020', 'AL142021', 'AL']
+
+storm_codes = []
+
+for year in range(2022, 2023):
+    # Open pickle file for a given storm year
+    with open(f"Data/{year}data.pkl", 'rb') as f:
+        x = pickle.load(f)
+
+    for dict in x:
+        storm_codes.append(dict)
+
+month = 1
 
 for storm in storm_codes:
     year = int(storm[-4:])
@@ -195,13 +206,23 @@ for storm in storm_codes:
 
     plt.show()
 
-    # max hscore plot per discussion
-    fig2, ax2 = plt.subplots(figsize=(10, 6))
-    plt.title(f"Maxval {storm}")
-    plt.xlabel("Hours Since Inception")
-    plt.ylabel("Wind Speed")
-    ax2.plot(t_release, max_harr, marker = "o")
-    plt.show()
+    all_less_than_20 = True
+
+    for value in max_harr:
+        if value >= 10:
+            all_less_than_20 = False
+            break
+
+    if all_less_than_20:
+        continue
+    else:
+        # max hscore plot per discussion
+        fig2, ax2 = plt.subplots(figsize=(10, 6))
+        plt.title(f"Maxval {storm}")
+        plt.xlabel("Hours Since Inception")
+        plt.ylabel("Wind Speed (m/s)")
+        ax2.plot(t_release, max_harr, marker = "o")
+        plt.show()
 
 
     
