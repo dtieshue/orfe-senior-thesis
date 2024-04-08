@@ -5,11 +5,11 @@ from matplotlib import cm
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 
-year = 2017
+dict = 'AL262020'
+year = int(dict[-4:])
 with open(f"Data/{year}data.pkl", 'rb') as f:
     x = pickle.load(f)
 
-dict = 'AL092017'
 
 # set up the figure for each storm
 fig, ax = plt.subplots(subplot_kw={'projection': ccrs.PlateCarree()})
@@ -66,8 +66,12 @@ for i, key in enumerate(x[dict].keys()):
 
 # plot city of interest
 ax.plot(-95.3698, 29.7604, marker="*", color='c', markersize=10)
-ax.plot(-80.1918, 25.7617, marker="o", color='r', markersize=1)
-ax.plot(-76.8099, 18.0179, marker="o", color='r', markersize=1)
+# ax.plot(-80.1918, 25.7617, marker="o", color='r', markersize=1)
+# ax.plot(-76.8099, 18.0179, marker="o", color='r', markersize=1)
+ax.plot(-93.9399, 29.8850, marker="*", color='r', markersize=1) # define lat long values for port arthur
+ax.plot(-91.1871,30.4515, marker = "*", color = 'g' ) # define lat long values for baton rouge
+
+
 
 latmean = latsum / tot
 lonmean = lonsum / tot

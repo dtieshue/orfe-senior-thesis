@@ -31,9 +31,8 @@ def extract_text_from_url(url, start_keyword, end_keyword):
 master_dict = {}
 
 # loop through each year *** NO 2023, no pre-2003
-for year in range(2022, 2023):
+for year in range(2010, 2015):
 
-  # *********************************** comment out if putting data from mutliple years in one dict ***************************************
   master_dict = {}
 
   # provide website data of NOAA archive for each year
@@ -50,7 +49,7 @@ for year in range(2022, 2023):
     found_cyc = False
     storm_urls = []
     for link in links:
-      # print(link.get('href'))
+      print(link.get('href'))
       if found_cyc:
         break;
       elif link.get('href') == '/cyclones/':
@@ -60,9 +59,9 @@ for year in range(2022, 2023):
         # print(link.get('href'))
         href = link.get('href')
         storm_urls.append(f'https://www.nhc.noaa.gov/archive/{year}/{href}')
-      elif found_arc1 & (link.get('href') == '/archive/2023/') :
+      elif found_arc1 & (link.get('href') == f'/archive/2023/') :
         found_arc2 = True
-      elif link.get('href') == '/archive/2023/':
+      elif link.get('href') == f'/archive/2023/':
         found_arc1 = True
       else:
         continue;
@@ -99,17 +98,36 @@ for year in range(2022, 2023):
     # specify words to start and end with in the text
     start_keyword = "DISCUSSION"
     end_keyword = f" {year}"
-    start_keyword2 = "FORECAST POSITIONS AND MAX WINDS"
+    start_keyword2 = "ORECAST POSITIONS AND MAX WINDS"
     end_keyword2 = "$"
 
     storm_dict = {}
     i = 1
 
 
+
     # loop through the discussion urls
     for url in urls_to_read:
-        name_datetime = extract_text_from_url(url, start_keyword, end_keyword)
-        loc_speed = extract_text_from_url(url, start_keyword2, end_keyword2)
+        try:
+          name_datetime = extract_text_from_url(url, start_keyword, end_keyword)
+        except Exception as e:
+          # Print the error message if needed (optional)
+          print(f"An error occurred: {e}")
+
+          # Set name_datetime to a default value or handle the error
+          name_datetime = extract_text_from_url(url, start_keyword, " 2006")  # if there is an error in a discussion for a particular year
+
+        try:
+          loc_speed = extract_text_from_url(url, start_keyword2, end_keyword2)
+        except Exception as e:
+          # Print the error message if needed (optional)
+          print(f"An error occurred: {e}")
+
+          # Set name_datetime to a default value or handle the error
+          loc_speed = 'beginning ' + extract_text_from_url(url, "INIT", end_keyword2)  # if there is an error in a discussion for a particular year
+    
+
+        loc_speed = loc_speed.replace('VT', '')
 
         name_datetime_arr = name_datetime.split("\n")
         loc_speed_arr = loc_speed.split("\n")[2:]
@@ -132,7 +150,19 @@ for year in range(2022, 2023):
             # print text content
             print(f'Location/Direction/Speed:\n{loc_speed_arr}')
 
-        # storm_name = name_datetime
+        # Getting Storm Name from URL
+        pattern = r'[a-z]{2}\d{6}'
+
+        # Search for the pattern in the URL
+        match = re.search(pattern, url, re.IGNORECASE)
+
+        if match:
+            storm_name = match.group().upper()  # Convert to uppercase
+            print(storm_name)  # Output will be: 'EP132004'
+        else:
+            print("No match found")
+
+        print(storm_name)
 
         # initialize an empty list to store the data for a particular advisory
         parsed_data = {}
@@ -197,6 +227,7 @@ for year in range(2022, 2023):
 
 
 
+
   # add the storm's dictionary information to the master dictionary
     master_dict[storm_name] = storm_dict
     # print("storm:")
@@ -211,24 +242,14 @@ for year in range(2022, 2023):
   # load pickle module
   import pickle
 
-  # define dictionary
-  # dict = {'Python' : '.py', 'C++' : '.cpp', 'Java' : '.java'}
+  pkl_file_path = f"Data/{year}data.pkl"
 
-  # create a binary pickle file 
-  f = open(f"Data/{year}data.pkl","wb")
+  with open(pkl_file_path, "wb") as f:
+      pickle.dump(master_dict, f)
 
-  # write the python object (dict) to pickle file
-  pickle.dump(master_dict,f)
-
-  # close file
-  f.close()
-
-  # f = open("2021data.pkl", 'rb')
-
-  # x = pickle.load(f)
-
-  # f.close()
-
-  # print(x)
-
+  # Debug: Read back the pickled file to verify
+  with open(pkl_file_path, "rb") as f:
+      loaded_data = pickle.load(f)
+      print("Data loaded from pickle file:")
+      print(loaded_data.keys())
 

@@ -7,7 +7,7 @@ import cartopy.feature as cfeature
 import matplotlib.ticker as mticker
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 
-for year in range(2021, 2022):
+for year in range(2020, 2021):
     # Open pickle file for a given storm year
     with open(f"Data/{year}data.pkl", 'rb') as f:
         x = pickle.load(f)
@@ -56,6 +56,9 @@ for year in range(2021, 2022):
             ax.plot(lon_arr, lat_arr,
             color=color, linewidth=2,
             transform=ccrs.Geodetic(),)  
+
+            ax.plot(-93.9399, 29.8850, marker="o", color='r', markersize=1) # define lat long values for port arthur
+
 
             # Adding gridlines with labels
             gl = ax.gridlines(draw_labels=True, dms=False, x_inline=False, y_inline=False)
