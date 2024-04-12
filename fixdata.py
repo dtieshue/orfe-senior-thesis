@@ -2,13 +2,13 @@
 # code to fix a data entry (such as a typo in the website)
 import pickle
 
-year = 2009
+year = 2020
 
 # Load the dictionary from the pickle file
 with open(f"Data/{year}data.pkl", 'rb') as f:
     x = pickle.load(f)
 
-print(x['EP012009']['6'])
+print(x['AL222020'])
 # x['EP012009']['6']['24HR']['Time (UTC)'] = '20/1800Z'
 
 # x['AL022007']['2'] = storm_data = {
@@ -35,6 +35,6 @@ print(x['EP012009']['6'])
 # # Update the value in the dictionary
 # x['AL092006']['14']['48H']['Latitude'] = '61.0N'
 
-# Open the file in write mode (wb) to save the updated dictionary
-with open(f"Data/{year}data.pkl", 'wb') as f:
-    pickle.dump(x, f)
+# # Open the file in write mode (wb) to save the updated dictionary
+# with open(f"Data/{year}data.pkl", 'wb') as f:
+#     pickle.dump(x, f)

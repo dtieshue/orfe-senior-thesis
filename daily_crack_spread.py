@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import numpy as np
 
 # Load the CSV data
 file_path = 'eod.csv'
@@ -47,3 +48,7 @@ plt.grid(True)
 plt.tight_layout()
 plt.show()
 
+print(np.mean(pivot_data['crack_spread']))
+print(np.std(pivot_data['crack_spread']))
+print(np.max(pivot_data['crack_spread']))
+print(np.min(pivot_data['crack_spread']))
